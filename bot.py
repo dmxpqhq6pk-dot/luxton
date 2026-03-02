@@ -1,4 +1,5 @@
 import logging
+import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputFile
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, filters, ContextTypes
 
@@ -9,10 +10,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Конфигурация
-BOT_TOKEN = '7205371569:AAGM4zv59yX3-9Z9MJhMY9T7Vzwdc6iutMQ'
-SUPPORT_CHAT_ID = -1002831062931
-SUPPORT_ACCOUNT_ID = 8222462689
+# Конфигурация из переменных окружения
+BOT_TOKEN = os.getenv('BOT_TOKEN', '7205371569:AAGM4zv59yX3-9Z9MJhMY9T7Vzwdc6iutMQ')
+SUPPORT_CHAT_ID = int(os.getenv('SUPPORT_CHAT_ID', '-1002831062931'))
+SUPPORT_ACCOUNT_ID = int(os.getenv('SUPPORT_ACCOUNT_ID', '8222462689'))
 WELCOME_IMAGE_PATH = 'welcome_image.png'
 USER_TRACKING_TOPIC_ID = None  # ID темы для отслеживания пользователей (будет создана автоматически)
 
