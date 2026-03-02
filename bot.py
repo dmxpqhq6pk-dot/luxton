@@ -15,7 +15,30 @@ BOT_TOKEN = os.getenv('BOT_TOKEN', '7205371569:AAGM4zv59yX3-9Z9MJhMY9T7Vzwdc6iut
 SUPPORT_CHAT_ID = int(os.getenv('SUPPORT_CHAT_ID', '-1002831062931'))
 SUPPORT_ACCOUNT_ID = int(os.getenv('SUPPORT_ACCOUNT_ID', '8222462689'))
 WELCOME_IMAGE_PATH = 'welcome_image.png'
-USER_TRACKING_TOPIC_ID = None  # ID темы для отслеживания пользователей (будет создана автоматически)
+TRACKING_TOPIC_FILE = 'tracking_topic_id.txt'  # Файл для хранения ID темы статистики
+
+# Загрузка ID темы статистики из файла
+def load_tracking_topic_id():
+    """Загружает ID темы статистики из файла"""
+    try:
+        if os.path.exists(TRACKING_TOPIC_FILE):
+            with open(TRACKING_TOPIC_FILE, 'r') as f:
+                return int(f.read().strip())
+    except Exception as e:
+        logger.error(f"Ошибка при загрузке ID темы: {e}")
+    return None
+
+# Сохранение ID темы статистики в файл
+def save_tracking_topic_id(topic_id):
+    """Сохраняет ID темы статистики в файл"""
+    try:
+        with open(TRACKING_TOPIC_FILE, 'w') as f:
+            f.write(str(topic_id))
+        logger.info(f"ID темы статистики сохранен: {topic_id}")
+    except Exception as e:
+        logger.error(f"Ошибка при сохранении ID темы: {e}")
+
+USER_TRACKING_TOPIC_ID = load_tracking_topic_id()  # Загружаем при старте
 
 # Словарь для хранения связи пользователь -> тема
 user_topics = {}
@@ -72,6 +95,7 @@ async def log_user_start(context, user):
                     name="📊 Статистика пользователей"
                 )
                 USER_TRACKING_TOPIC_ID = topic.message_thread_id
+                save_tracking_topic_id(USER_TRACKING_TOPIC_ID)  # Сохраняем в файл
                 logger.info(f"Создана тема для статистики с ID: {USER_TRACKING_TOPIC_ID}")
             except Exception as e:
                 logger.error(f"Ошибка при создании темы статистики: {e}")
