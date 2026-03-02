@@ -50,6 +50,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except FileNotFoundError:
         logger.warning(f"Файл {WELCOME_IMAGE_PATH} не найден, отправляю текст без картинки")
         await update.message.reply_text(message_text, reply_markup=reply_markup)
+    except Exception as e:
+        logger.error(f"Ошибка при отправке картинки: {e}, отправляю текст")
+        await update.message.reply_text(message_text, reply_markup=reply_markup)
 
 # Обработчик нажатий на инлайн-кнопки
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
